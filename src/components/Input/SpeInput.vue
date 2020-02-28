@@ -1,6 +1,6 @@
 <template>
-<div class="input-box" @click.stop="setBorder">
-  <input v-model="value" class="input-content" type="text" @keyup.enter="search" :placeholder="placeholder" />
+<div class="input-box">
+  <input v-model="value" class="input-content" type="text" @keyup.enter="search" placeholder="搜索" />
     <div class="icon-box">
       <div class="middle">
         <div class="input-modal" @click="search"></div>
@@ -58,14 +58,13 @@ input::-webkit-input-placeholder {
   display: inline-block;
   position: relative;
   background: white;
-  width: 328px;
+  width: 200px;
   height: 48px;
   border-radius: 24px;
   padding-left: 20px;
-  margin-right: 17px;
   box-shadow: 0 0 1px 0 rgba(51,51,51,0.08), 0 3px 6px 0 rgba(51,51,51,0.05);
   box-sizing: content-box;
-  border: 1px solid #ffffff;
+  border: 1px solid #4851E3;
   transition: 0.3s;
 }
 
@@ -76,7 +75,7 @@ input::-webkit-input-placeholder {
   border: none;
   outline: none;
   border-radius: 24px;
-  width: 250px;
+  width: 150px;
   padding-left: 2px;
   font-size: 14px;
   font-weight: 600;
@@ -91,8 +90,8 @@ input::-webkit-input-placeholder {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 48px;
-  height: 48px;
+  width: 49px;
+  height: 49px;
   border-radius: 24px;
   transition: 0.5s;
 }

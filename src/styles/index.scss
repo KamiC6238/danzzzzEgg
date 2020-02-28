@@ -1,5 +1,21 @@
 @import "../assets/iconfont2/iconfont.css";
 
 ::-webkit-scrollbar {
-  width: 0px!important;
+  width: 0!important;
+}
+
+input::-webkit-input-placeholder{
+  color: #909090;
+}
+
+.el-menu--horizontal>.el-menu-item.is-active {
+  border-bottom: 2px solid #4851e3!important;
+  color: #4851e3!important;
+}
+.el-menu--horizontal>.el-menu-item {
+  color: rgb(114, 119, 123);
+}
+.el-menu--horizontal .el-menu-item:not(.is-disabled):focus,
+.el-menu--horizontal .el-menu-item:not(.is-disabled):hover {
+  color: #4851e3;
 }

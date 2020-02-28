@@ -1,4 +1,3 @@
-
 <template>
   <div class="login-container">
     <div class="login-form">
@@ -215,24 +214,51 @@ export default {
         username: this.loginForm.username,
         password: this.loginForm.password
       }).then(res => {
-        if(res && res.status) {
-          localStorage.setItem('token', res.data.token)
+        if(res && res.data.status) {
+          let result = res.data.userInfo
+          localStorage.setItem('userInfo', JSON.stringify(result))
+          this.$router.push('/index') // 登录成功后跳转到首页
+        } else if(res && !res.data.status) {
+          this.$message({
+            message: '用户名或密码有误, 请重新输入',
+            type: 'error'
+          })
         }
       })
     },
     handleRegister() {
+      if(this.checkTwoPass()) {
+        return
+      }
       register({
         username: this.loginForm.username,
         password: this.loginForm.password
       }).then(res => {
-        if(res && res.status) {
+        if(res && res.data.status) {
           this.isRegister = false
+        } else if(res && !res.data.status) {
+          this.$message.error({
+            message: res.data.message,
+            type: 'error'
+          })
         }
       })
+    },
+    checkTwoPass() {
+      if(this.loginForm.password !== this.loginForm.checkPass) {
+        this.$message({
+          message: '两次输入的密码不一致, 请重新输入',
+          type: 'error'
+        })
+        return true
+      }
+      return false
     }
   },
   created() {
-    
+    if(this.$route.path === '/auth/register') {
+      this.isRegister = true
+    }
   }
 }
 </script>
@@ -253,9 +279,8 @@ html, body {
   height: 100%;
 }
 .login-container {
-  position: absolute;
   width: 100%;
-  height: 100%;
+  height: 689px;
   background: url("../../assets/img/login.png") no-repeat;
   background-size: cover;
   background-position: 50%;

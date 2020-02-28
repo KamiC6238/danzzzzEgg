@@ -26,11 +26,11 @@ export default {
     },
     fontSize: {
       type: String,
-      default: '16px'
+      default: '14px'
     },
     fontWeight: {
       type: String,
-      default: 'bold'
+      default: 'normal'
     },
   },
   data() {
@@ -74,6 +74,7 @@ export default {
   .btn {
     color: white;
     font-size: 16px;
+    text-decoration: none;
   }
 }
 </style>

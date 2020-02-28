@@ -1,0 +1,97 @@
+export const tags = [{
+  tagId: 'Element-UI',
+  tagName: 'Element-UI',
+  imageName: 'element',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: 'Vue.js',
+  tagName: 'Vue.js',
+  imageName: 'vue',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: 'Node.js',
+  tagName: 'Node.js',
+  imageName: 'node',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: '算法',
+  tagName: '算法',
+  imageName: 'math',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: '网络',
+  tagName: '网络',
+  imageName: 'network',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: '操作系统',
+  tagName: '操作系统',
+  imageName: 'os',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: '面试',
+  tagName: '面试',
+  imageName: 'mianshi',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: 'LeetCode',
+  tagName: 'LeetCode',
+  imageName: 'leetcode',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: 'iView',
+  tagName: 'iView',
+  imageName: 'iview',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: 'Egg.js',
+  tagName: 'Egg.js',
+  imageName: 'egg',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: 'Express',
+  tagName: 'Express',
+  imageName: 'express',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: 'Koa',
+  tagName: 'Koa',
+  imageName: 'koa',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: 'Java',
+  tagName: 'Java',
+  imageName: 'java',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: 'Spring',
+  tagName: 'Spring',
+  imageName: 'Spring',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: 'SpringCloud',
+  tagName: 'SpringCloud',
+  imageName: 'SpringCloud',
+  isFocus: false,
+  selected: false
+}, {
+  tagId: '云计算',
+  tagName: '云计算',
+  imageName: 'cloud',
+  isFocus: false,
+  selected: false
+}]

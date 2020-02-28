@@ -15,9 +15,9 @@ const service = axios.create({
 })
 
 service.interceptors.request.use((request) => { // 请求拦截器
-  let token = localStorage.getItem('token')
+  let token = JSON.parse(localStorage.getItem('userInfo')).token
   if (token) {
-    request.headers['Authorization'] = `Bearer ${token}`
+    // request.headers['Authorization'] = `Bearer ${token}`
   }
   return request
 }, err => {
@@ -25,16 +25,19 @@ service.interceptors.request.use((request) => { // 请求拦截器
 })
 
 service.interceptors.response.use((response) => { // 响应拦截器
+  
   return response
 }, err => {
-  if (err.response.status === 401) { // 返回401说明token失效了, 需要重新登录
-    localStorage.removeItem('token')
-    _this.$message({
-      message: '登录已失效, 请重新登录',
-      type: 'warning'
-    })
-    router.push('/auth/login')
-  }
+
+  // if (err.response.status === 401) { // 返回401说明token失效了, 需要重新登录
+  //   localStorage.removeItem('token')
+  //   localStorage.removeItem('uid')
+  //   // _this.$message({
+  //   //   message: '登录已失效, 请重新登录',
+  //   //   type: 'warning'
+  //   // })
+  //   router.push('/index')
+  // }
 })
 
 export default service

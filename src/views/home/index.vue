@@ -1,50 +1,47 @@
 <template>
   <div class="home">
-    <nav-bar></nav-bar>
     <main-container :articles="articles"></main-container>
   </div>
 </template>
 
 <script>
-import NavBar from '@/components/navbar/index'
 import MainContainer from '@/components/MainContainer/index'
+import { getArticles } from '@/apis/articles/articles'
+import { getUserInfo } from '@/apis/UserInfo'
+import getDateDiff from '@/utils/getTime'
 export default {
   name: 'home',
   components: {
-    NavBar,
-    MainContainer
+    MainContainer,
   },
   data() {
     return {
-      articles: [{
-        describe: 'danzzzz · 5小时前 · CSS',
-        title: '[译]给破碎图片添加样式'
-      }, {
-        describe: 'danzzzz · 5小时前 · CSS',
-        title: '[译]给破碎图片添加样式'
-      }, {
-        describe: 'danzzzz · 5小时前 · CSS',
-        title: '[译]给破碎图片添加样式'
-      }, {
-        describe: 'danzzzz · 5小时前 · CSS',
-        title: '[译]给破碎图片添加样式'
-      }, {
-        describe: 'danzzzz · 5小时前 · CSS',
-        title: '[译]给破碎图片添加样式'
-      }, {
-        describe: 'danzzzz · 5小时前 · CSS',
-        title: '[译]给破碎图片添加样式'
-      }, {
-        describe: 'danzzzz · 5小时前 · CSS',
-        title: '[译]给破碎图片添加样式'
-      }, {
-        describe: 'danzzzz · 5小时前 · CSS',
-        title: '[译]给破碎图片添加样式'
-      }]
+      articles: []
     }
   },
-  mounted() {
-
+  methods: {
+    changeIsMarkdown(res) {
+      this.isMarkdown = res
+    },
+    getArticleList(uid) {
+      getArticles({
+        uid,
+        other_uid: JSON.parse(localStorage.getItem('userInfo')).uid
+      }).then(res => {
+        if(res && res.data.status) {
+          let data = res.data.data
+          data.forEach((article, index) => {
+            data[index].tags = article.tags.split(',').join('/')
+            data[index].create_time = getDateDiff(parseInt(article.create_time))
+          })
+          this.articles = data
+          this.$store.commit('setArticles', this.articles)
+        }
+      })
+    },
+  },
+  created() {
+    this.getArticleList()
   }
 }
 </script>
