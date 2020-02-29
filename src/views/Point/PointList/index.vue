@@ -119,8 +119,13 @@ export default {
       })
     },
     getReply(point_id, index) {
-      getAllReply({
-        point_id
+      // getAllReply({
+      //   point_id
+      // })
+      this.$axios({
+        url: '/apis/reply/getAllReply',
+        method: 'get',
+        params: { point_id }
       }).then(res => {
         if(res && res.data.status) {
           let comments = JSON.parse(JSON.stringify(res.data.comments))

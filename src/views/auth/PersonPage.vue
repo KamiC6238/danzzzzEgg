@@ -149,8 +149,13 @@ export default {
     },
     getUserInfo(uid) {
       if(uid) {
-        getUserInfo({
-          uid
+        // getUserInfo({
+        //   uid
+        // })
+        this.$axios({
+          url: '/apis/getUserInfo',
+          method: 'get',
+          params: { uid }
         }).then(res => {
           if(res && res.data.status) {
             this.userInfo = res.data.userInfo
@@ -166,8 +171,13 @@ export default {
       }
     },
     getFocusAndFollowers() {
-      getFocus({
-        uid: this.$route.params.uid
+      // getFocus({
+      //   uid: this.$route.params.uid
+      // })
+      this.$axios({
+        url: '/apis/user/focusAndFollowers',
+        method: 'get',
+        params: { uid: this.$route.params.uid }
       }).then(res => {
         if(res && res.data.status) {
           let data = res.data.data
@@ -183,9 +193,19 @@ export default {
     // 在个人页面获取文章列表的时候，可能是别人在看另外一个人的主页
     // 所以这个时候需要两个uid，根据两个uid来判断当前浏览页面的用户是否点赞了某篇文章
     getArticleList(uid) {
-      getArticles({
-        uid,
-        other_uid: JSON.parse(localStorage.getItem('userInfo')).uid
+      // getArticles({
+      //   uid,
+      //   other_uid: JSON.parse(localStorage.getItem('userInfo')).uid
+      // })
+      let info = localStorage.getItem('userInfo')
+      this.$axios({
+        url: '/apis/getArticles',
+        method: 'get',
+        params: {
+          uid,
+          other_uid: info ? JSON.parse(info).uid : '',
+          is_log: info ? true : false
+        }
       }).then(res => {
         if(res && res.data.status) {
           let data = res.data.data
@@ -208,10 +228,20 @@ export default {
     },
     // 获取沸点
     getAllPin(uid) {
-      getAllPin({
-        uid,
-        other_uid: JSON.parse(localStorage.getItem('userInfo')).uid,
-        type: ''
+      // getAllPin({
+      //   uid,
+      //   other_uid: JSON.parse(localStorage.getItem('userInfo')).uid,
+      //   type: ''
+      // })
+      let info = localStorage.getItem('userInfo')
+      this.$axios({
+        url: '/apis/user/getAllPins',
+        method: 'get',
+        params: {
+          uid,
+          other_uid: info ? JSON.parse(info).uid : '',
+          isLog: info ? true : false
+        }
       }).then(res => {
         if(res && res.data.status) {
           this.getPointLikes(res.data.points)                  // 获取所有沸点的点赞数一共有多少
@@ -267,7 +297,8 @@ export default {
     // 进入个人信息页面的时候, 要判断浏览页面的用户和被浏览的用户是否是同一个人
     reset() {
       let uid = this.$route.params.uid                                // 被浏览的用户的uid
-      let uid_1 = JSON.parse(localStorage.getItem('userInfo')).uid    // 浏览页面的用户的uid
+      let info = localStorage.getItem('userInfo')
+      let uid_1 = info ? JSON.parse(info).uid : ''   // 浏览页面的用户的uid
       if(uid_1 !== uid) {                                            
         this.isRealUser = false
         this.userIsFocus(uid, uid_1)        // 不是同一个人，就判断浏览页面的用户是否关注了被浏览的用户

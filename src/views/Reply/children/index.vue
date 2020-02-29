@@ -64,6 +64,8 @@ export default {
       let postData = {
         username: info ? JSON.parse(info).username : '',
         uid: info ? JSON.parse(info).uid : '',
+        replyUserUid: this.replyUser.uid,
+        replyUserContent: this.replyUser.content,
         content: this.inputValue,
         reply_id: this.replyUser.reply_id,
         avatar: info ? JSON.parse(info).avatar : '',
@@ -78,12 +80,25 @@ export default {
       }
       return postData
     },
-    replyComment() {
+    isCanReply() {
       if(this.check()) {
         this.$message({
           type: 'error',
           message: '回复不能为空哦'
         })
+        return false
+      }
+      if(!JSON.parse(localStorage.getItem('userInfo'))) {
+        this.$message({
+          type: 'warning',
+          message: '请先登录'
+        })
+        return false
+      }
+      return true
+    },
+    replyComment() {
+      if(!this.isCanReply()) {
         return
       }
       let postData = this.getPostData()

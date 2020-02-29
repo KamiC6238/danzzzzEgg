@@ -34,7 +34,7 @@
         </el-menu-item>
       </div>
     </el-menu>
-    <el-card class="box-card hide-card" v-if="isLogged">  
+    <el-card class="box-card hide-card" v-if="isLogged">
       <div class="text item" @click="toWritePage">
         <p>写文章</p>
       </div>
@@ -48,7 +48,7 @@
         <p>登出</p>
       </div>
     </el-card>
-    <el-card class="box-card hide-card" v-if="!isLogged">  
+    <el-card class="box-card hide-card" v-else>  
       <div class="text item" @click="toLoginPage">
         <p>登录</p>
       </div>
@@ -180,7 +180,7 @@ export default {
       this.$router.push({
         name: 'point',
         params: {
-          uid
+          uid: uid ? uid : 'tourist'
         }
       })
     },
@@ -204,7 +204,7 @@ export default {
     logout() {
       localStorage.removeItem('userInfo')
       this.imageUrl = this.defaultUrl
-      this.islogged = false
+      this.isLogged = false
       this.$router.push('/index')
       this.$store.commit('setLogStatus', false)
     },
@@ -223,6 +223,7 @@ export default {
   created() {
     if(!JSON.parse(localStorage.getItem('userInfo'))) {
       this.isLogged = false
+      this.isHideDot = true
     } else {
       this.isLogged = true
       this.getAvatar()

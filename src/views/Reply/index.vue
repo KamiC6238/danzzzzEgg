@@ -103,6 +103,13 @@ export default {
     },
     // 最外层的评论框
     mainReply() {
+      if(!JSON.parse(localStorage.getItem('userInfo'))) {
+        this.$message({
+          type: 'warning',
+          message: '请先登录'
+        })
+        return
+      }
       if(this.check()) {
         this.$message({
           type: 'error',

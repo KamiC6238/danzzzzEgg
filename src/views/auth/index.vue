@@ -210,9 +210,13 @@ export default {
         this.handleRegister()
         return
       }
-      login({
-        username: this.loginForm.username,
-        password: this.loginForm.password
+      this.$axios({
+        url: '/apis/auth/login',
+        method: 'post',
+        data: {
+          username: this.loginForm.username,
+          password: this.loginForm.password
+        }
       }).then(res => {
         if(res && res.data.status) {
           let result = res.data.userInfo

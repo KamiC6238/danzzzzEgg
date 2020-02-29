@@ -56,9 +56,17 @@ export default {
       })
     },
     likesArticle(item, index) {
-      let uid = JSON.parse(localStorage.getItem('userInfo')).uid
+      // let uid = JSON.parse(localStorage.getItem('userInfo')).uid
+      let info = localStorage.getItem('userInfo')
+      if(!info) {
+        this.$message({
+          type: 'warning',
+          message: '请先登录'
+        })
+        return
+      }
       likeArticle({
-        uid,                               // 点赞的用户
+        uid: info ? JSON.parse(info).uid : '',                               // 点赞的用户
         other_uid: item.uid,               // 被点赞的文章所属的用户
         article_id: item.article_id,
         article_title: item.article_title, // 被点赞的文章的标题

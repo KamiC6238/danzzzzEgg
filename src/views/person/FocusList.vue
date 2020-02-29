@@ -47,7 +47,8 @@ export default {
   watch: {
     '$route.params.uid': {
       handler() {
-        let realUserId = JSON.parse(localStorage.getItem('userInfo')).uid
+        let info = localStorage.getItem('userInfo')
+        let realUserId = info ? JSON.parse(info).uid : ''
         let otherUserId = this.$route.params.uid
         if(realUserId === otherUserId) {
           this.isRealUser = true
@@ -106,8 +107,8 @@ export default {
     }
   },
   created() {
-    console.log(this.focuserList, 'focuserList')
-    let realUserId = JSON.parse(localStorage.getItem('userInfo')).uid
+    let info = localStorage.getItem('userInfo')
+    let realUserId = info ? JSON.parse(info).uid : ''
     let curUserId = this.$route.params.uid
     if(realUserId !== curUserId) {
       this.isRealUser = false

@@ -19,8 +19,10 @@ service.interceptors.request.use((request) => { // 请求拦截器
   if (token) {
     // request.headers['Authorization'] = `Bearer ${token}`
   }
+  console.log('没有被拦截')
   return request
 }, err => {
+  console.log('被拦截了')
   return Promise.reject(error)
 })
 

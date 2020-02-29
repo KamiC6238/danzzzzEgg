@@ -14,6 +14,14 @@ export default {
   components: {
     MainContainer,
   },
+  watch: {
+    '$store.state.isLog': {
+      // 登录状态改变的时候重新请求数据
+      handler() {
+        this.getArticleList()
+      }
+    }
+  },
   data() {
     return {
       articles: []
@@ -23,10 +31,16 @@ export default {
     changeIsMarkdown(res) {
       this.isMarkdown = res
     },
-    getArticleList(uid) {
-      getArticles({
-        uid,
-        other_uid: JSON.parse(localStorage.getItem('userInfo')).uid
+    getArticleList() {
+      let info = localStorage.getItem('userInfo')
+      this.$axios({
+        url: '/apis/getArticles',
+        method: 'get',
+        params: {
+          uid: '',
+          other_uid: info ? JSON.parse(info).uid : '',
+          is_log: info ? true : false
+        }
       }).then(res => {
         if(res && res.data.status) {
           let data = res.data.data

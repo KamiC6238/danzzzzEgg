@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import Vuex from 'vuex'
+import axios from 'axios'
 import store from './store/store'
 import globalCss from '@/styles/index.scss'  // 全局样式
 
@@ -13,6 +14,9 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 import Viewer from 'v-viewer'
 import 'viewerjs/dist/viewer.css'
+
+Vue.prototype.$axios = axios
+
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)

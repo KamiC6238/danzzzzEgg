@@ -17,7 +17,7 @@
               <p>
                 <span class="time">{{userInfo.create_time}}</span>
                 <span class="read-nums">阅读 {{userInfo.read_nums || 0}} · 
-                  <a href="javascript:void(0);" class="edit" @click="edit">编辑</a>
+                  <a href="javascript:void(0);" class="edit" @click="edit" v-if="isShowEdit">编辑</a>
                 </span>
               </p>
             </div>
@@ -99,6 +99,7 @@ export default {
   },
   data() {
     return {
+      isShowEdit: false,
       userInfo: {},
       comments: [],
       imageUrl: '',
@@ -124,8 +125,13 @@ export default {
     },
     getReply() {
       let article_id = this.$route.params.article_id
-      getAllReply({
-        article_id
+      // getAllReply({
+      //   article_id
+      // })
+      this.$axios({
+        url: '/apis/reply/getAllReply',
+        method: 'get',
+        params: { article_id }
       }).then(res => {
         if(res && res.data.status) {
           let comments = res.data.comments
@@ -137,10 +143,16 @@ export default {
     },
     getSingleArticle() {
       let article_id = this.$route.params.article_id
-      getSingleArticle({ article_id }).then(res => {
+      // getSingleArticle({ article_id }).then
+      this.$axios({
+        url: '/apis/getSingleArticle',
+        method: 'get',
+        params: { article_id }
+      }).then(res => {
         if(res && res.data.status) {
           let node = document.querySelector('.markdown-content')
           let userInfo = res.data.data
+          this.showEdit(userInfo)
           userInfo.tags = userInfo.tags.split(',')
           userInfo.create_time = getDateDiff(parseInt(userInfo.create_time))
           this.userInfo = userInfo
@@ -149,6 +161,14 @@ export default {
           this.$store.commit('setCurArticle', this.userInfo)
         }
       })
+    },
+    showEdit(userInfo) {
+      let info = localStorage.getItem('userInfo')
+      if(info) {
+        if(JSON.parse(info).uid === userInfo.uid) {
+          this.isShowEdit = true
+        }
+      }
     }
   },
   created() {

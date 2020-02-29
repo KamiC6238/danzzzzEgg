@@ -35,7 +35,7 @@
             <i class="iconfont icon-dianzan1" v-if="item.isLike"></i>
             <span class="num">{{item.support || 0}}</span>
           </div>
-          <el-dropdown trigger="click">
+          <el-dropdown trigger="click" v-if="isRealUser">
             <span class="el-dropdown-link">...</span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item @click.native="editArticle(index)">编辑</el-dropdown-item>
@@ -72,6 +72,7 @@ export default {
   },
   data() {
     return {
+      isRealUser: true,
       curIndex: null,
       dialogVisible: false,
       imageUrl: '',
@@ -79,7 +80,20 @@ export default {
     }
   },
   methods: {
+    isCanLike() {
+      if(!localStorage.getItem('userInfo')) {
+        this.$message({
+          type: 'warning',
+          message: '请先登录'
+        })
+        return false
+      }
+      return true
+    },
     likes(item, index) {
+      if(!this.isCanLike()) {
+        return
+      }
       let uid = JSON.parse(localStorage.getItem('userInfo')).uid
       likeArticle({
         uid,                               // 点赞的用户
@@ -136,6 +150,18 @@ export default {
       })
     },
   },
+  created() {
+    let info = localStorage.getItem('userInfo')
+    if(info) {
+      if(JSON.parse(info).uid === this.$route.params.uid) {
+        this.isRealUser = true
+      } else {
+        this.isRealUser = false
+      }
+    } else {
+      this.isRealUser = false
+    }
+  }
 }
 </script>
 

@@ -155,7 +155,9 @@ export default {
       follow_num: 0,
       emojiShow: false,          // 是否展示表情
       content: '',               // 内容
-      userInfo: {}, 
+      userInfo: {
+        avatar: 'null'
+      }, 
       imageList: [],             // 展示的图片列表 url类型
       imageCache: [],            // 缓存图片 file类型
       preTagIndex: null,         // 上一个被点击的标签
@@ -178,10 +180,18 @@ export default {
   },
   methods: {
     toPerson(index = null) {
+      let info = localStorage.getItem('userInfo')
+      if(!info) {
+        this.$message({
+          type: 'warning',
+          message: '请先登录'
+        })
+        return
+      }
       this.$router.push({
         name: 'personPage',
         params: {
-          uid: JSON.parse(localStorage.getItem('userInfo')).uid,
+          uid: JSON.parse(info).uid,
           activeIndex: index
         }
       })
@@ -263,24 +273,28 @@ export default {
     },
     getAllPin() {
       let info = localStorage.getItem('userInfo')
-      if(info && JSON.parse(info).uid) {
-        getAllPin({
-          uid: JSON.parse(info).uid,
-          other_uid: this.$route.params.uid,
+      // getAllPin({
+      //   uid: info ? JSON.parse(info).uid : '',
+      //   other_uid: info ? this.$route.params.uid : '',
+      //   type: 'all',
+      //   isLog: info ? true : false
+      // })
+      this.$axios({
+        url: '/apis/user/getAllPins',
+        method: 'get',
+        params: {
+          uid: info ? JSON.parse(info).uid : '',
+          other_uid: info ? this.$route.params.uid : '',
           type: 'all',
-        }).then(res => {
-          if(res && res.data.status) {
-            let points = this.formatPoint(res.data.points)
-            this.points = this.isShowFocus(points)               // 是否展示关注按钮, 其他用户才展示, 本身不展示
-            this.$store.commit('setPoints', this.points)         // 保存当前沸点状态
-          }
-        })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '获取缓存用户信息有误'
-        })
-      }
+          isLog: info ? true : false
+        }
+      }).then(res => {
+        if(res && res.data.status) {
+          let points = this.formatPoint(res.data.points)
+          this.points = this.isShowFocus(points)               // 是否展示关注按钮, 其他用户才展示, 本身不展示
+          this.$store.commit('setPoints', this.points)         // 保存当前沸点状态
+        }
+      })
     },
     getPointsNum() {
       getAllPin({
@@ -370,10 +384,12 @@ export default {
     }
   },
   created() {
-    this.getAllFocus()
     this.getAllPin()     // 获取所有沸点
-    this.getPointsNum()
-    this.setUserInfo()
+    if(localStorage.getItem('userInfo')) {
+      this.getAllFocus()
+      this.getPointsNum()
+      this.setUserInfo()
+    }
   },
 }
 </script>
