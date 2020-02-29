@@ -235,9 +235,17 @@ export default {
       if(this.checkTwoPass()) {
         return
       }
-      register({
-        username: this.loginForm.username,
-        password: this.loginForm.password
+      // register({
+      //   username: this.loginForm.username,
+      //   password: this.loginForm.password
+      // }).
+      this.$axios({
+        url: '/apis/auth/register',
+        method: 'post',
+        data: {
+          username: this.loginForm.username,
+          password: this.loginForm.password
+        }
       }).then(res => {
         if(res && res.data.status) {
           this.isRegister = false

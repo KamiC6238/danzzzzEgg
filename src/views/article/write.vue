@@ -161,7 +161,6 @@ export default {
             message: '发布成功, 即将跳转到文章页面'
           })
           this.uploadCoverImage(res.data.article_id)
-          this.isInsertNotification(res.data.article_id)
         }
       })
     },
@@ -176,7 +175,7 @@ export default {
       formData.append('file', this.coverImage)
       upload(formData).then(res => {
         if(res && res.data.status) {
-          this.toArticlePage(article_id)
+          this.isInsertNotification(article_id)
         }
       })
     },
@@ -188,7 +187,7 @@ export default {
         tags: this.selectedTagList.join(','),                    // 文章标签
       }).then(res => {
         if(res && res.data.status) {
-
+          this.toArticlePage(article_id)
         }
       })
     },
