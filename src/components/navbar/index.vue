@@ -13,7 +13,7 @@
           <div class="btn-box" @click="writeArticle">
             <div class="modal-color">
               <div class="flex">
-                  <a class="btn" href="/#/editor/draft/new">写文章</a>
+                  <a class="btn" href="###">写文章</a>
                 </div>
               </div>
             </div>
@@ -34,7 +34,7 @@
         </el-menu-item>
       </div>
     </el-menu>
-    <el-card class="box-card hide-card">  
+    <el-card class="box-card hide-card" v-if="isLogged">  
       <div class="text item" @click="toWritePage">
         <p>写文章</p>
       </div>
@@ -48,6 +48,12 @@
         <p>登出</p>
       </div>
     </el-card>
+    <el-card class="box-card hide-card" v-if="!isLogged">  
+      <div class="text item" @click="toLoginPage">
+        <p>登录</p>
+      </div>
+    </el-card>
+
   </div>
 </template>
 
@@ -74,6 +80,7 @@ export default {
   },
   data() {
     return {
+      isLogged: true,   // 判断用户是否已登录
       activeIndex: '1',
       inputValue: '',
       imageUrl: '',
@@ -86,6 +93,9 @@ export default {
     }
   },
   methods:{
+    toLoginPage() {
+      this.$router.push('/auth/login')
+    },
     // 获取通知
     getNotification() {
       getNotification({
@@ -103,7 +113,7 @@ export default {
       let res = true
       if(notifications.length) {
         notifications.forEach(item => {
-          if(!item.isRead) {
+          if(!item.is_read) {
             res = false
           }
         })
@@ -116,7 +126,14 @@ export default {
       })
     },
     toNotification() {
-      this.$router.push({ name: 'notifications' })
+      if(!JSON.parse(localStorage.getItem('userInfo'))) {
+        this.$message({
+          type: 'warning',
+          message: '请先登录'
+        })
+      } else {
+        this.$router.push({ name: 'notifications' })
+      }
     },
     handleSelect(key, keyPath) {
       
@@ -134,11 +151,17 @@ export default {
       this.$router.push('/index')
     },
     writeArticle() {
-      console.log('写文章')
-      this.$router.push('/editor/draft/new')
+      if(!JSON.parse(localStorage.getItem('userInfo'))) {
+        this.$message({
+          type: 'warning',
+          message: '请先登录'
+        })
+      } else {
+        this.$router.push('/editor/draft/new')
+      }
     },
     toWritePage() {
-      this.$router.push('/editor/draft/new')
+      this.writeArticle()
     },
     tagsManage() {
       this.$router.push({
@@ -180,6 +203,10 @@ export default {
     },
     logout() {
       localStorage.removeItem('userInfo')
+      this.imageUrl = this.defaultUrl
+      this.islogged = false
+      this.$router.push('/index')
+      this.$store.commit('setLogStatus', false)
     },
     checkImageUrl() {
       if(this.imageUrl.indexOf('null') > -1) {
@@ -194,8 +221,13 @@ export default {
     }
   },
   created() {
-    this.getAvatar()
-    this.getNotification()
+    if(!JSON.parse(localStorage.getItem('userInfo'))) {
+      this.isLogged = false
+    } else {
+      this.isLogged = true
+      this.getAvatar()
+      this.getNotification()
+    }
   }
 }
 </script>

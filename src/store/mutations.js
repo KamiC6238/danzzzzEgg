@@ -1,4 +1,7 @@
 export default {
+  setLogStatus(state, status) {
+    state.isLog = status
+  },
   // 保存沸点id
   setPointId(state, pointId) {
     state.point_id = ''
@@ -123,7 +126,7 @@ export default {
   },
   // 将某条通知消息设置为已读状态
   setIsRead(state, index) {
-    state.notifications[index].isRead = 1
+    state.notifications[index].is_read = 1
   },
   setCurArticle(state, article) {
     state.curArticle = article

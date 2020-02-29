@@ -74,10 +74,6 @@
                 @change="outerUpload"
                />
             </div>
-            <div class="topic">
-              <i class="el-icon-paperclip"></i>
-              <span>话题</span>
-            </div>
           </div>
           <div class="button" @click="publishPoint">
             <button class="btn">发布</button>
@@ -231,6 +227,13 @@ export default {
     },
     // 发布沸点
     publishPoint() {
+      if(!JSON.parse(localStorage.getItem('userInfo'))) {
+        this.$message({
+          type: 'warning',
+          message: '请先登录'
+        })
+        return
+      }
       let formData = this.getPostData()
       publishPin(formData).then(res => {
         if(res) {
@@ -264,7 +267,7 @@ export default {
         getAllPin({
           uid: JSON.parse(info).uid,
           other_uid: this.$route.params.uid,
-          type: 'all'
+          type: 'all',
         }).then(res => {
           if(res && res.data.status) {
             let points = this.formatPoint(res.data.points)

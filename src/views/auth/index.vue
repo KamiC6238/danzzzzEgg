@@ -56,10 +56,10 @@
       </div>
     </div>
     <div class="btn">
-      <div class="btn-box" @click="handleLogin">
+      <div class="btn-box" @click.stop="handleLogin">
         <div class="modal-color">
           <div class="flex">
-            <a class="btn" href="#" v-if="!isRegister">
+            <a class="btn" href="/#/auth/login" v-if="!isRegister">
               登录
             </a>
             <a class="btn" href="#" v-else-if="isRegister">
@@ -218,6 +218,7 @@ export default {
           let result = res.data.userInfo
           localStorage.setItem('userInfo', JSON.stringify(result))
           this.$router.push('/index') // 登录成功后跳转到首页
+          this.$store.commit('setLogStatus', true)  // 保存登录状态
         } else if(res && !res.data.status) {
           this.$message({
             message: '用户名或密码有误, 请重新输入',

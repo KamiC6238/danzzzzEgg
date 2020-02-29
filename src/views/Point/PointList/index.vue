@@ -139,6 +139,13 @@ export default {
       }
     },
     like(point_id, index) {
+      if(!JSON.parse(localStorage.getItem('userInfo'))) {
+        this.$message({
+          type: 'warning',
+          message: '请先登录'
+        })
+        return
+      }
       let info = localStorage.getItem('userInfo')
       this.changeLikesNum(point_id)
       if(info && JSON.parse(info).uid) {
@@ -175,6 +182,13 @@ export default {
     },
     // 关注或者取消关注
     focusUser(uid, index) {
+      if(!JSON.parse(localStorage.getItem('userInfo'))) {
+        this.$message({
+          type: 'warning',
+          message: '请先登录'
+        })
+        return
+      }
       let focusId = uid
       let userId = this.$route.params.uid
       focusUser({

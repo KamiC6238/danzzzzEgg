@@ -8,12 +8,6 @@
         <div class="right">
           <el-input v-model="inputValue" placeholder="输入评论..."></el-input>
           <div class="bottom-box">
-            <div class="tools">
-              <div class="emoji">
-                <i class="iconfont icon-biaoqing"></i>
-                <span>表情</span>
-              </div>
-            </div>
             <div class="reply-btn" @click="mainReply">
               <button class="btn">评论</button>
             </div>
@@ -202,7 +196,7 @@ export default {
         flex: 1;
         .bottom-box {
           display: flex;
-          justify-content: space-between;
+          justify-content: flex-end;
           align-items: center;
           margin-top: 8px;
           .tools {

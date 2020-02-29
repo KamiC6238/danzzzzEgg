@@ -16,74 +16,74 @@
               <p class="username" @click="toPersonPage(item.uid)">{{item.username}}</p>
               <div class="desc">
                 <span class="post">{{item.post + ' '}}</span>
-                <span class="grep" v-if="!item.post === ''">@</span>
-                <span class="company">{{item.company}}</span>
-                <span class="dot" v-if="!item.post === '' || !item.company === ''"> · </span>
+                <span class="grep">@</span>
+                <span class="company">{{' ' + item.company}}</span>
+                <span class="dot"> · </span>
                 <span class="time">{{item.create_time}}</span>
               </div>
             </div>
           </div>
           <div class="button">
-            <button :class="[{'btn': true}, {'is-read': item.isRead}]" v-if="item.isRead">已读</button>
-            <button :class="[{'btn': true}, {'is-not-read': !item.isRead}]" v-if="!item.isRead">未读</button>
+            <button :class="[{'btn': true}, {'is-read': item.is_read}]" v-if="item.is_read">已读</button>
+            <button :class="[{'btn': true}, {'is-not-read': !item.is_read}]" v-if="!item.is_read">未读</button>
           </div>
         </div>
         <div class="reply-child">
           <span>{{item | childTextFilter}}</span>
         </div>
         <div class="link">
-          <i v-if="item.isPublish" class="el-icon-document"></i>
-          <i v-if="item.isArticleLike || item.isPointLike" class="iconfont icon-dianzan1"></i>
+          <i v-if="item.is_publish" class="el-icon-document"></i>
+          <i v-if="item.is_article_like || item.is_point_like" class="iconfont icon-dianzan1"></i>
           <i
-            v-if="item.isArticleReply ||
-                  item.isArticleChildReply ||
-                  item.isPointReply ||
-                  item.isPointChildReply"
+            v-if="item.is_article_reply ||
+                  item.is_article_child_reply ||
+                  item.is_point_reply ||
+                  item.is_point_child_reply"
             class="el-icon-chat-dot-round"></i>
-          <i v-if="item.isFocus" class="el-icon-s-custom"></i>
+          <i v-if="item.is_focus" class="el-icon-s-custom"></i>
           <span class="link-desc">
             <span>{{ item | textFilter }}</span>
             <a
-              v-if="item.isArticleReply"
+              v-if="item.is_article_reply"
               :href="'/#/post/' + item.article_id"
               @click="isRead(item, index)">
-              {{item.article_content}}
+              {{item.article_reply_content}}
             </a>
             <a
-              v-if="item.isArticleLike"
+              v-if="item.is_article_like"
               :href="'/#/post/' + item.article_id"
               @click="isRead(item, index)">
               {{item.article_title}}
             </a>
             <a
-              v-if="item.isPointLike || item.isPointReply"
+              v-if="item.is_point_like || item.is_point_reply"
               href="###"
               class="point"
               @click="isRead(item, index)">
-              {{item.point_content}}
+              {{item.point_reply_content}}
             </a>
 
             <a
-              v-if="item.isPointChildReply"
+              v-if="item.is_point_child_reply"
               href="###"
               @click="isRead(item, index)">
               {{item.point_be_reply_content}}
             </a>
 
             <a
-              v-if="item.isArticleChildReply"
+              v-if="item.is_article_child_reply"
               :href="'/#/post/' + item.article_id"
               @click="isRead(item, index)">
               {{item.article_be_reply_content}}
             </a>
             <a
-              v-if="item.isPublish"
+              v-if="item.is_publish"
               :href="'/#/post/' + item.article_id"
               @click="isRead(item, index)">
               {{item.article_title}}
             </a>
             <a
-              v-if="item.isFocus"
+              v-if="item.is_focus"
               :href="'/#/user/' + item.uid"
               @click="isRead(item, index)">
               {{item.username}}
@@ -110,37 +110,37 @@ export default {
   },
   filters: {
     textFilter(item) {
-      if(item.isArticleLike) {
+      if(item.is_article_like) {
         return '赞了你的文章：'
       }
-      if(item.isArticleReply) {
+      if(item.is_article_reply) {
         return '评论了你的文章：'
       }
-      if(item.isPointLike) {
+      if(item.is_point_like) {
         return '赞了你的沸点：'
       }
-      if(item.isPointReply) {
+      if(item.is_point_reply) {
         return '评论了你的沸点：'
       }
-      if(item.isPointChildReply) {
+      if(item.is_point_child_reply) {
         return '回复了你在沸点里的评论：'
       }
-      if(item.isArticleChildReply) {
+      if(item.is_article_child_reply) {
         return '回复了你在文章里的评论：'
       }
-      if(item.isFocus) {
+      if(item.is_focus) {
         return '一个新的关注者：'
       }
-      if(item.isPublish) {
+      if(item.is_publish) {
         return '发布了文章：'
       }
     },
     childTextFilter(item) {
       if(item.article_be_reply_content) {
-        return item.article_content
+        return item.article_reply_content
       }
       if(item.point_be_reply_content) {
-        return item.point_content
+        return item.point_reply_content
       }
     }
   },
@@ -165,7 +165,7 @@ export default {
         article_id: item.article_id
       }).then(res => {
         if(res && res.data.status) {
-          if(!item.isRead) {
+          if(!item.is_read) {
             this.$store.commit('setIsRead', index)
           }
         }
@@ -175,8 +175,8 @@ export default {
   created() {
     this.notifications = this.$store.state.notifications
     this.notifications.forEach((item, index) => {
-      if(item.isPointChildReply || item.isPointReply || item.isPointLike) {
-        this.notifications[index].isRead = true
+      if(item.is_point_child_reply || item.is_point_reply || item.is_point_like) {
+        this.notifications[index].is_read = true
         this.isRead(item, index)
       }
     })

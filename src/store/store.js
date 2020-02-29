@@ -5,6 +5,7 @@ import mutations from './mutations'
 Vue.use(Vuex)
 
 const state = {
+  isLog: false,               // 登录状态
   points: [],                 // 当前沸点列表
   point_id: '',               // 当前沸点id
   articles: [],               // 文章列表
