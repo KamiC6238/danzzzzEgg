@@ -7,7 +7,7 @@
       </div>
       <div class="navbar-right">
         <el-menu-item>
-          <spe-input></spe-input>
+          <spe-input @searchArticle="searchArticle"></spe-input>
         </el-menu-item>
         <el-menu-item style="padding-left:0px;">
           <div class="btn-box" @click="writeArticle">
@@ -29,7 +29,12 @@
         </el-menu-item>
         <el-menu-item style="padding-left:0px;">
           <div class="avatar" @click.stop="showUserMenu">
-            <img :src="imageUrl === '' ? defaultUrl : imageUrl" alt="">
+            <div
+              :style="[{'backgroundImage': 'url(' + imageUrl + ')'}]"
+              :class="[{'cover': true}]"
+              v-if="imageUrl"
+            ></div>
+            <img v-else :src="defaultUrl" alt="">
           </div>
         </el-menu-item>
       </div>
@@ -63,6 +68,7 @@ import SpeButton from '@/components/Button/SpeButton'
 import getUserAvatar from '@/utils/getUserAvatar'
 import { getNotification } from '@/apis/notification/index'
 import getDateDiff from '@/utils/getTime'
+import { search } from '@/apis/articles/articles'
 export default {
   name: 'navbar',
   components: {
@@ -93,6 +99,25 @@ export default {
     }
   },
   methods:{
+    searchArticle(value) {
+      // search({ value })
+      this.$axios({
+        url: '/apis/article/search',
+        method: 'get',
+        params: { value }
+      }).then(res => {
+        if(res && res.data.status) {
+          this.$router.push('/index')      // 搜索的时候跳转到首页
+          res.data.articles.forEach((article, index) => {
+            res.data.articles[index].create_time = getDateDiff(parseInt(article.create_time))
+          })
+          // 设置当前关键字，是为了能够在home组件内通过关键字进行replace操作
+          this.$store.commit('setCurSearchValue', value)
+          // 设置搜索后的文章, home组件监听store变化，替换搜索后的文章列表
+          this.$store.commit('setArticles', res.data.articles)
+        }
+      })
+    },
     toLoginPage() {
       this.$router.push('/auth/login')
     },
@@ -206,7 +231,8 @@ export default {
       this.imageUrl = this.defaultUrl
       this.isLogged = false
       this.$router.push('/index')
-      this.$store.commit('setLogStatus', false)
+      this.$store.commit('reset')
+      // this.$store.commit('setLogStatus', false)
     },
     checkImageUrl() {
       if(this.imageUrl.indexOf('null') > -1) {
@@ -298,6 +324,19 @@ export default {
   .navbar-right {
     display:flex;
     justify-content: flex-end;
+    .avatar {
+      display: flex;
+      height: 100%;
+      align-items: center;
+    }
+    .cover {
+      background-size: cover;
+      background-position: 50%;
+      background-repeat: no-repeat;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+    }
     .avatar img {
       display: inline-block;
       width: 30px;

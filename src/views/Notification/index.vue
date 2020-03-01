@@ -5,7 +5,9 @@
         <div class="user">
           <div class="userinfo">
             <div class="left">
+              <el-avatar v-if="item.is_tags" :src="getImage(item.tags)"></el-avatar>
               <el-avatar
+                v-else
                 @click.native="toPersonPage(item.uid)"
                 size="medium"
                 :src="item.avatar.indexOf('null') > -1 ? defaultUrl : item.avatar"
@@ -14,7 +16,13 @@
             </div>
             <div class="right">
               <p class="username" @click="toPersonPage(item.uid)">{{item.username}}</p>
-              <div class="desc">
+              <div v-if="item.is_tags" class="tag">
+                <span class="tag-name">{{item.tags | tagFilter(tags)}}</span>
+                <div class="desc">
+                  <span class="time">{{item.create_time}}</span>
+                </div>
+              </div>
+              <div class="desc" v-else>
                 <span class="post">{{item.post + ' '}}</span>
                 <span class="grep">@</span>
                 <span class="company">{{' ' + item.company}}</span>
@@ -32,7 +40,7 @@
           <span>{{item | childTextFilter}}</span>
         </div>
         <div class="link">
-          <i v-if="item.is_publish" class="el-icon-document"></i>
+          <i v-if="item.is_publish || item.is_tags" class="el-icon-document"></i>
           <i v-if="item.is_article_like || item.is_point_like" class="iconfont icon-dianzan1"></i>
           <i
             v-if="item.is_article_reply ||
@@ -77,7 +85,7 @@
               {{item.article_be_reply_content}}
             </a>
             <a
-              v-if="item.is_publish"
+              v-if="item.is_publish || item.is_tags"
               :href="'/#/post/' + item.article_id"
               @click="isRead(item, index)">
               {{item.article_title}}
@@ -98,6 +106,7 @@
 <script>
 import getDateDiff from '@/utils/getTime'
 import { isRead } from '@/apis/notification/index'
+import { tags } from '@/utils/tags'
 export default {
   name: 'notifications',
   watch: {
@@ -109,7 +118,17 @@ export default {
     }
   },
   filters: {
+    tagFilter(name, tags) {
+      for(let i = 0; i < tags.length; i++) {
+        if(tags[i].imageName === name) {
+          return tags[i].tagName
+        }
+      }
+    },
     textFilter(item) {
+      if(item.is_tags) {
+        return '你关注的标签有新的文章发布：'
+      }
       if(item.is_article_like) {
         return '赞了你的文章：'
       }
@@ -146,11 +165,15 @@ export default {
   },
   data() {
     return {
+      tags,
       notifications: [],
       defaultUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
     }
   },
   methods: {
+    getImage(name) {
+      return require('../../.././public/images/' + name + '.png')
+    },
     toPersonPage(uid) {
       this.$router.push({
         name: 'personPage',
@@ -161,8 +184,9 @@ export default {
     isRead(item, index) {
       isRead({
         uid: JSON.parse(localStorage.getItem('userInfo')).uid,
-        other_uid: item.uid,
-        article_id: item.article_id
+        other_uid: item.is_tags ? null : item.uid,
+        article_id: item.article_id,
+        is_tags: item.is_tags ? true : false
       }).then(res => {
         if(res && res.data.status) {
           if(!item.is_read) {
@@ -214,6 +238,15 @@ export default {
         }
         .right {
           padding: 0 12px;
+          .tag {
+            // display: flex;
+            // align-items: center;
+            height: 100%;
+            font-weight: bold;
+            .time {
+              font-weight: normal;
+            }
+          }
           .username {
             font-weight: bold;
             cursor: pointer;

@@ -8,11 +8,7 @@
           :key="index"
           @click="addBackground(index)"
         >
-          <a :href="'#'" class="">{{item.tagName}}</a>
-        </li>
-        <li class="divider"></li>
-        <li class='tag-item'>
-          <a href="#">上班摸鱼</a>
+          <a href="#" class="">{{item.tagName}}</a>
         </li>
       </ul>
     </div>
@@ -163,10 +159,6 @@ export default {
       preTagIndex: null,         // 上一个被点击的标签
       points: [],                // 传给子组件的沸点列表
       tags: [{
-        tagName: '推荐',
-        tagValue: '/pins/recommended',
-        isClick: false
-      }, {
         tagName: '热门',
         tagValue: '/pins/hot',
         isClick: false
@@ -385,7 +377,7 @@ export default {
   },
   created() {
     this.getAllPin()     // 获取所有沸点
-    if(localStorage.getItem('userInfo')) {
+    if(localStorage.getItem('userInfo')) {  // 如果用户已登录
       this.getAllFocus()
       this.getPointsNum()
       this.setUserInfo()
@@ -423,7 +415,6 @@ export default {
   .point-tag {
     position: fixed;
     width: 112px;
-    height: 191px;
     background: #fff;
     margin-right: 15px;
     border-radius: 4px;
@@ -628,6 +619,10 @@ export default {
           font-weight: bold;
         }
         .desc {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 150px;
           font-size: 14px;
           color: #909090;
         }

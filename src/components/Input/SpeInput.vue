@@ -1,6 +1,6 @@
 <template>
 <div class="input-box">
-  <input v-model="value" class="input-content" type="text" @keyup.enter="search" placeholder="搜索" />
+  <input v-model="value" class="input-content" type="text" @keyup.enter="search" placeholder="搜索文章标题" />
     <div class="icon-box">
       <div class="middle">
         <div class="input-modal" @click="search"></div>
@@ -30,7 +30,8 @@ export default {
   },
   methods: {
     search() {
-      this.$emit('search', this.value)
+      this.$emit('searchArticle', this.value)
+      this.value = ''
     },
     setBorder() {
       let node = document.querySelector('.input-box')

@@ -23,6 +23,7 @@ const state = {
   focusedTags: [],             // 已关注的标签
   notifications: [],           // 通知列表
   curArticle: {},              // 当前文章页面
+  curSearchValue: '',          // 当前的搜索词
 }
 
 export default new Vuex.Store({

@@ -4,7 +4,12 @@
       <div class="main-container">
         <div class="introduction">
           <div class="left">
-            <img :src="imageUrl === '' ? defaultUrl : imageUrl" alt="">
+            <div
+              :style="[{'backgroundImage': 'url(' + imageUrl + ')'}]"
+              :class="[{'cover': true}]"
+              v-if="imageUrl"
+            ></div>
+            <img v-else :src="defaultUrl" class="avatar">
           </div>
           <div class="middle">
             <div class="username">
@@ -38,7 +43,6 @@
           <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
             <el-menu-item index="1">沸点 · {{points.length}}</el-menu-item>
             <el-menu-item index="2">文章 · {{articles.length}}</el-menu-item>
-            <el-menu-item index="3">赞 · 0</el-menu-item>
             <el-menu-item index="4">关注 · {{focus_num || 0}}</el-menu-item>
             <el-menu-item index="5">关注者 · {{follow_num || 0}}</el-menu-item>
           </el-menu>
@@ -263,6 +267,9 @@ export default {
       this.$store.commit('setLikesTotal', this.likes_total)
     },
     focusUser() {
+      if(!this.isCanFocus()) {
+        return
+      }
       focusUser({
         uid: JSON.parse(localStorage.getItem('userInfo')).uid,
         focus_id: this.$route.params.uid
@@ -277,6 +284,17 @@ export default {
           }
         }
       })
+    },
+    isCanFocus() {
+      let info = localStorage.getItem('userInfo')
+      if(!info) {
+        this.$message({
+          type: 'warning',
+          message: '请先登录'
+        })
+        return false
+      }
+      return true
     },
     /**
      *  @uid      当前页面用户的id
@@ -353,6 +371,14 @@ export default {
       padding: 32px;
       .left {
         margin-right: 32px;
+        .cover {
+          background-size: cover;
+          background-position: 50%;
+          background-repeat: no-repeat;
+          border-radius: 50%;
+          width: 90px;
+          height: 90px;
+        }
         img {
           display: inline-block;
           width: 90px;

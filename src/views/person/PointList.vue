@@ -125,22 +125,28 @@ export default {
       }
     },
     like(point_id, index) {
-      let info = localStorage.getItem('userInfo')
-      if(info && JSON.parse(info).uid) {
-        likePoint({
-          uid: JSON.parse(info).uid,
-          point_id
-        }).then(res => {
-          if(res && res.data.status) {
-            this.changeLikesNum(point_id)
-          }
-        })
-      } else {
-        this.$message({
-          type: 'error',
-          message: '获取缓存用户信息有误'
-        })
+      if(!this.isCanLike()) {
+        return
       }
+      likePoint({
+        uid: JSON.parse(localStorage.getItem('userInfo')).uid,
+        point_id
+      }).then(res => {
+        if(res && res.data.status) {
+          this.changeLikesNum(point_id)
+        }
+      })
+    },
+    isCanLike() {
+      let info = localStorage.getItem('userInfo')
+      if(!info) {
+        this.$message({
+          type: 'warning',
+          message: "请先登录"
+        })
+        return false
+      }
+      return true
     },
     changeLikesNum(point_id) {
       let points = this.$store.state.points

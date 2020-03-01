@@ -112,6 +112,7 @@ export default {
   methods: {
     // 选择标签
     selectTag(tagName, index) {
+      console.log(tagName, 'tagname')
       if(this.tags[index].selected) {
         this.tags[index].selected = false
         this.selectedTag -= 1

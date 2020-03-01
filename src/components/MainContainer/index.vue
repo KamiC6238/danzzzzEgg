@@ -10,7 +10,7 @@
             <span class="tags">{{item.tags}}</span>
           </div>
           <div class="content" @click="toArticle(item.article_id)">
-            <span>{{item.article_title}}</span>
+            <span v-html="item.article_title"></span>
           </div>
           <div class="likes" @click="likesArticle(item, index)">
             <i class="iconfont icon-dianzan" v-if="!item.isLike"></i>

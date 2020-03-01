@@ -20,6 +20,18 @@ export default {
       handler() {
         this.getArticleList()
       }
+    },
+    '$store.state.articles': {
+      handler() {
+        this.articles = this.$store.state.articles
+        let value = this.$store.state.curSearchValue
+        if(value) {
+          this.articles.forEach((item, index) => {
+            this.articles[index].article_title = item.article_title.replace(value, `<em style="color:#e8001c;">${value}</em>`)
+          })
+        }
+        this.$store.commit('setCurSearchValue', '')
+      }
     }
   },
   data() {

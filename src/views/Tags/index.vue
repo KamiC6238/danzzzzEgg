@@ -46,14 +46,21 @@ export default {
         }
       })
     },
+    // 找出用户已关注的标签, 如果没有，那么所有tag的isFocus属性都为false表示都未关注
     formatTags(data) {
-      for(let i = 0; i < data.length; i++) {
-        for(let j = 0; j < this.tags.length; j++) {
-          if(this.tags[j].tagName === data[i].tag_name) {
-            this.tags[j].isFocus = true
-            this.focusedTags.push(this.tags[j])
+      if(data.length) {
+        for(let i = 0; i < data.length; i++) {
+          for(let j = 0; j < this.tags.length; j++) {
+            if(this.tags[j].tagName === data[i].tag_name) {
+              this.tags[j].isFocus = true
+              this.focusedTags.push(this.tags[j])
+            }
           }
         }
+      } else {
+        this.tags.forEach((tag, index) => {
+          this.tags[index].isFocus = false
+        })
       }
       this.allTags = this.tags
       this.$store.commit('setAllTags', this.allTags)

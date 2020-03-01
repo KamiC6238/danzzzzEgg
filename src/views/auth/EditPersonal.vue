@@ -19,7 +19,12 @@
                 :on-change="uploadChange"
                 :on-progress="uploadProgress"
                 :before-upload="beforeAvatarUpload">
-                <img :src="imageUrl === '' ? defaultUrl : imageUrl" class="avatar">
+                <div
+                  :style="[{'backgroundImage': 'url(' + imageUrl + ')'}]"
+                  :class="[{'cover': true}]"
+                  v-if="imageUrl"
+                ></div>
+                <img v-else :src="defaultUrl" class="avatar">
               </el-upload>
               <div class="des">
                 <p>支持 jpg、png 格式大小 5M 以内的图片</p>
@@ -170,7 +175,13 @@ export default {
     save(index) {
       this.setUserForm()
       editUserInfo(this.userForm).then(res => {
-        console.log(res)
+        if(res && res.data.status) {
+          let userInfo = JSON.parse(localStorage.getItem('userInfo'))
+          let obj = JSON.parse(JSON.stringify(this.userForm))
+          obj.avatar = userInfo.avatar
+          obj.token = userInfo.token
+          localStorage.setItem('userInfo', JSON.stringify(obj))
+        }
       })
       this.list[index].isFix = true
     },
@@ -300,6 +311,14 @@ export default {
             .cancel {
               font-size: 14px;
               cursor: pointer;
+            }
+            .cover {
+              background-size: cover;
+              background-position: 50%;
+              background-repeat: no-repeat;
+              border-radius: 4px;
+              width: 60px;
+              height: 60px;
             }
             .avatar {
               width: 60px;

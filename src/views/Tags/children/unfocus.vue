@@ -8,11 +8,11 @@
         <p class="tag-name">{{item.tagName}}</p>
         <div class="btn-box">
           <button
-            @click="focusTag(item.tagName, index)"
+            @click="focusTag(item, index)"
             :class="[{'focus-btn': true}, {'is-focus': item.isFocus}]"
             v-if="item.isFocus">
           已关注</button>
-          <button class="focus-btn" @click="focusTag(item.tagName, index)" v-if="!item.isFocus">关注</button>
+          <button class="focus-btn" @click="focusTag(item, index)" v-if="!item.isFocus">关注</button>
         </div>
       </div>
     </div>
@@ -40,11 +40,12 @@ export default {
     getImage(name) {
       return require('../../../.././public/images/' + name + '.png')
     },
-    focusTag(tag_name, index) {
+    focusTag(item, index) {
       let uid = this.$route.params.uid
       focusTag({
         uid,
-        tag_name
+        tag_name: item.tagName,
+        image_name: item.imageName
       }).then(res => {
         if(res && res.data.status) {
           if(this.tags[index].isFocus) {

@@ -39,3 +39,11 @@ export function likeArticle(data) {
     data
   })
 }
+
+export function search(params) {
+  return request({
+    url: '/apis/article/search',
+    method: 'get',
+    params
+  })
+}
